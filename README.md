@@ -61,7 +61,7 @@ npm run start
 ```text
 src/
   app/            Routes, root layout, global CSS, and metadata
-  components/     Shared UI, including shadcn/ui primitives in components/ui
+  components/     Shared UI. ui/ holds shadcn primitives. shared/ holds application components.
   features/       Feature modules for upcoming product areas
   hooks/          Reusable React hooks that are not owned by one feature
   lib/            Shared helpers. utils.ts exposes the cn class name helper
@@ -76,9 +76,11 @@ public/
   icons/          Icons served from the site root
 ```
 
-`src/app/globals.css` holds the active design tokens. Tailwind CSS and shadcn/ui read that file, so theme changes belong there. `src/styles` is reserved for extra global stylesheets that are not part of the shadcn theme entry.
+`src/app/globals.css` holds the active design tokens. Tailwind CSS and shadcn/ui read that file, so theme changes belong there. `src/styles/typography.css` holds the semantic type scale.
 
-Design tokens use shadcn/ui CSS variables for light and dark themes. Surfaces are cool neutrals, foreground text is high contrast, and the primary brand color is indigo. Spacing follows Tailwind's default 0.25rem scale. Corner radius comes from the `--radius` token (`0.625rem`) and the derived `radius-*` sizes. Geist is the sans-serif UI font. Dark mode is class-based through `next-themes`.
+Surfaces are cool neutrals. Primary is a dark navy indigo, and accent is a restrained violet. Spacing follows Tailwind's 0.25rem scale. Corner radius comes from the `--radius` token (`0.5rem`). Geist is the sans-serif UI font. Light, dark, and system themes are class-based through `next-themes`.
+
+The temporary design-system reference is available at `/design-system` while the dev server is running.
 
 ## Contribution guidelines
 

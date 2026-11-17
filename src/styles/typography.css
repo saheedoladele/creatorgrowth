@@ -1,0 +1,65 @@
+/*
+  Semantic type scale for Creator Growth Platform.
+  Weights, line heights, and tracking stay consistent.
+  Consumers add color with text-* token utilities.
+*/
+@utility text-display {
+  font-size: 2rem;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+@utility text-page-title {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@utility text-section-title {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+@utility text-card-title {
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+@utility text-body {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+@utility text-small {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+@utility text-label {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+@utility text-caption {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  font-weight: 400;
+}
+
+@utility text-stat {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
