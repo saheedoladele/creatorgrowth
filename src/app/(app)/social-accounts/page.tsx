@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/layout/placeholder-page";
-import { placeholderPages } from "@/constants/pages";
-
-const page = placeholderPages.socialAccounts;
+import { SocialAccountsView } from "@/features/social-accounts/components/social-accounts-view";
 
 export const metadata: Metadata = {
-  title: page.title,
-  description: page.description,
+  title: "Social Accounts",
+  description: "Manage your connected social media accounts in one place.",
 };
 
 export default function SocialAccountsPage() {
-  return <PlaceholderPage title={page.title} description={page.description} />;
+  return <SocialAccountsView />;
 }

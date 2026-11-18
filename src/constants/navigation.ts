@@ -70,6 +70,10 @@ const routeSegmentLabels: Record<string, string> = {
 };
 
 const breadcrumbOverrides: Record<string, readonly Breadcrumb[]> = {
+  "/social-accounts/connect": [
+    { label: "Social Accounts", href: "/social-accounts" },
+    { label: "Connect Account" },
+  ],
   "/campaigns": [
     { label: "Campaigns", href: "/campaigns" },
     { label: "All Campaigns" },
