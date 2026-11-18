@@ -10,7 +10,13 @@ export default function Home() {
         <p className="text-muted-foreground text-base leading-7">
           The frontend foundation is ready.
         </p>
-        <p>
+        <p className="flex items-center justify-center gap-4">
+          <Link
+            href="/login"
+            className="text-primary text-sm font-medium underline-offset-4 hover:underline"
+          >
+            Sign in
+          </Link>
           <Link
             href="/dashboard"
             className="text-primary text-sm font-medium underline-offset-4 hover:underline"
