@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/shared/page-header";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 
 import { ShowcaseNav } from "./showcase-nav";
-import { ThemeSwitcher } from "./theme-switcher";
 import { ButtonSection } from "./sections/button-section";
 import { ColorSection } from "./sections/color-section";
 import { DisplaySection } from "./sections/display-section";
