@@ -1,17 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { LogOut, Shield, UserRound, Users } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +21,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { currentUser } from "@/config/user";
+import { useAuth } from "@/features/auth/components/auth-provider";
+import { initialsFromName } from "@/features/auth/types";
 import { cn } from "@/lib/utils";
 
 type UserMenuProps = {
@@ -35,20 +31,28 @@ type UserMenuProps = {
   onNavigate?: () => void;
 };
 
-function UserAvatar() {
+type Profile = {
+  name: string;
+  email: string;
+  initials: string;
+};
+
+function UserAvatar({ initials }: { initials: string }) {
   return (
     <Avatar>
       <AvatarFallback className="bg-primary text-primary-foreground text-xs font-medium">
-        {currentUser.initials}
+        {initials}
       </AvatarFallback>
     </Avatar>
   );
 }
 
 function AccountLinks({
+  profile,
   onNavigate,
   onSignOut,
 }: {
+  profile: Profile;
   onNavigate?: () => void;
   onSignOut: () => void;
 }) {
@@ -57,13 +61,13 @@ function AccountLinks({
       <DropdownMenuGroup>
         <DropdownMenuLabel className="font-normal">
           <span className="flex items-center gap-2 px-0.5 py-1">
-            <UserAvatar />
+            <UserAvatar initials={profile.initials} />
             <span className="min-w-0">
               <span className="block truncate text-sm font-medium">
-                {currentUser.name}
+                {profile.name}
               </span>
               <span className="text-muted-foreground block truncate text-xs">
-                {currentUser.email}
+                {profile.email}
               </span>
             </span>
           </span>
@@ -107,54 +111,32 @@ function AccountLinks({
   );
 }
 
-function SignOutDialog({
-  open,
-  onOpenChange,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}) {
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Sign out</DialogTitle>
-          <DialogDescription>
-            Signing out is not available yet. Authentication will be added in a
-            later release.
-          </DialogDescription>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
 function MenuShell({
   trigger,
   side,
   align,
+  profile,
   onNavigate,
+  onSignOut,
 }: {
   trigger: ReactNode;
   side: "top" | "bottom" | "right";
   align: "start" | "end";
+  profile: Profile;
   onNavigate?: () => void;
+  onSignOut: () => void;
 }) {
-  const [signOutOpen, setSignOutOpen] = useState(false);
-
   return (
-    <>
-      <DropdownMenu>
-        {trigger}
-        <DropdownMenuContent align={align} side={side} className="min-w-56">
-          <AccountLinks
-            onNavigate={onNavigate}
-            onSignOut={() => setSignOutOpen(true)}
-          />
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <SignOutDialog open={signOutOpen} onOpenChange={setSignOutOpen} />
-    </>
+    <DropdownMenu>
+      {trigger}
+      <DropdownMenuContent align={align} side={side} className="min-w-56">
+        <AccountLinks
+          profile={profile}
+          onNavigate={onNavigate}
+          onSignOut={onSignOut}
+        />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -163,18 +145,39 @@ export function UserMenu({
   collapsed = false,
   onNavigate,
 }: UserMenuProps) {
+  const router = useRouter();
+  const { user, logout } = useAuth();
+  const profile: Profile = user
+    ? {
+        name: user.name,
+        email: user.email,
+        initials: initialsFromName(user.name),
+      }
+    : {
+        name: currentUser.name,
+        email: currentUser.email,
+        initials: currentUser.initials,
+      };
+
+  const signOut = () => {
+    logout();
+    router.push("/login");
+  };
+
   if (variant === "sidebar") {
     return (
       <MenuShell
         side={collapsed ? "right" : "top"}
         align="start"
+        profile={profile}
         onNavigate={onNavigate}
+        onSignOut={signOut}
         trigger={
           <Tooltip disabled={!collapsed}>
             <TooltipTrigger
               render={
                 <DropdownMenuTrigger
-                  aria-label={collapsed ? currentUser.name : undefined}
+                  aria-label={collapsed ? profile.name : undefined}
                   className={cn(
                     "hover:bg-sidebar-accent focus-visible:ring-ring/50 flex w-full items-center gap-2 rounded-md px-2 py-2 text-left transition-colors outline-none focus-visible:ring-3",
                     collapsed && "justify-center px-0",
@@ -182,17 +185,17 @@ export function UserMenu({
                 />
               }
             >
-              <UserAvatar />
+              <UserAvatar initials={profile.initials} />
               <span className={cn("min-w-0 flex-1", collapsed && "sr-only")}>
                 <span className="block truncate text-sm font-medium">
-                  {currentUser.name}
+                  {profile.name}
                 </span>
                 <span className="text-muted-foreground block truncate text-xs">
-                  {currentUser.email}
+                  {profile.email}
                 </span>
               </span>
             </TooltipTrigger>
-            <TooltipContent side="right">{currentUser.name}</TooltipContent>
+            <TooltipContent side="right">{profile.name}</TooltipContent>
           </Tooltip>
         }
       />
@@ -203,12 +206,14 @@ export function UserMenu({
     <MenuShell
       side="bottom"
       align="end"
+      profile={profile}
+      onSignOut={signOut}
       trigger={
         <DropdownMenuTrigger
-          aria-label={`Account menu for ${currentUser.name}`}
+          aria-label={`Account menu for ${profile.name}`}
           className="focus-visible:ring-ring/50 rounded-full outline-none focus-visible:ring-3"
         >
-          <UserAvatar />
+          <UserAvatar initials={profile.initials} />
         </DropdownMenuTrigger>
       }
     />
