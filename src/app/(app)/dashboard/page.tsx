@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/layout/placeholder-page";
-import { placeholderPages } from "@/constants/pages";
-
-const page = placeholderPages.dashboard;
+import { DashboardView } from "@/features/dashboard/components/dashboard-view";
 
 export const metadata: Metadata = {
-  title: page.title,
-  description: page.description,
+  title: "Dashboard",
+  description: "Here's an overview of your social media performance.",
 };
 
 export default function DashboardPage() {
-  return <PlaceholderPage title={page.title} description={page.description} />;
+  return <DashboardView />;
 }
